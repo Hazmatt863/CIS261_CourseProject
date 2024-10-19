@@ -1,43 +1,75 @@
-# pay computation
+#(\n)Matthew Jones#
+#CIS261_CourseProject_phase_1(\n)#
  
+def get_employee_name():
+    """Input and return the employee's name."""
+    return input("Enter employee's name (or 'End' to finish): ")
 
-from typing import NewType
-def input:
-      input=e-name="name",e-payrate="payrate",e-hours=hours
+def get_total_hours():
+    """Input and return the total hours worked."""
+    return float(input("Enter total hours worked: "))
 
+def get_hourly_rate():
+    """Input and return the hourly rate."""
+    return float(input("Enter hourly rate: "))
 
-def employee_n0=1,n0=2,n0=3,n0=3,n0=4,n0=5:
-	employww_n0=input("e-name"), ("[1,2,3,4,5]"))
-while employee_n0=("e-name") <11:
-    overtime =0
-    e_name=input(f"\nEnter Employee {employee_n0}'s Name: ")
-    pay_rate=float(input("Enter Pay Rate: $"))
-    hours = float(input("Enter Hours: "))
+def get_income_tax_rate():
+    """Input and return the income tax rate as a percentage."""
+    return float(input("Enter income tax rate (as a percentage): "))
 
-    regular_pay = hours*pay_rate
+def calculate_pay(total_hours, hourly_rate, tax_rate):
+    """Calculate gross pay, income tax, and net pay."""
+    gross_pay = total_hours * hourly_rate
+    income_tax = gross_pay * (tax_rate / 100)
+    net_pay = gross_pay - income_tax
+    return gross_pay, income_tax, net_pay
 
-    if hours > 40:
-        overtime = (hours-40)*(1.5*pay_rate)
-        gross_pay = regular_pay + overtime
-    else:
-        gross_pay = regular_pay
+def display_employee_info(name, total_hours, hourly_rate, gross_pay, tax_rate, income_tax, net_pay):
+    """Display employee information."""
+    print(f"\nEmployee Name: {name}")
+    print(f"Total Hours: {total_hours}")
+    print(f"Hourly Rate: ${hourly_rate:.2f}")
+    print(f"Gross Pay: ${gross_pay:.2f}")
+    print(f"Income Tax Rate: {tax_rate}%")
+    print(f"Income Tax: ${income_tax:.2f}")
+    print(f"Net Pay: ${net_pay:.2f}\n")
 
-    # Tax Deductions
+def display_totals(total_employees, total_hours, total_gross_pay, total_tax, total_net_pay):
+    """Display totals for all employees."""
+    print("\n--- Summary ---")
+    print(f"Total Employees: {total_employees}")
+    print(f"Total Hours: {total_hours}")
+    print(f"Total Gross Pay: ${total_gross_pay:.2f}")
+    print(f"Total Tax: ${total_tax:.2f}")
+    print(f"Total Net Pay: ${total_net_pay:.2f}\n")
 
-    fed_tax = gross_pay * 0.1 
-    state_tax = gross_pay*0.06
-    fica = gross_pay *0.03
+def main():
+    total_employees = 0
+    total_hours = 0
+    total_gross_pay = 0  # Fixed the assignment here
+    total_tax = 0
+    total_net_pay = 0
 
-    #Net Pay
+    while True:
+        name = get_employee_name()  # Removed the colon here
+        if name.lower() == 'end':
+            break
 
-    net_pay = gross_pay - ( fed_tax + state_tax + fica )
+        hours = get_total_hours()
+        rate = get_hourly_rate()
+        tax_rate = get_income_tax_rate()
 
-    # Payroll  Details
-    
-    print(f"\nRegular Pay: ${regular_pay} Overtime Pay: ${overtime}, Gross Pay: ${gross_pay}, Federal Tax: ${fed_tax}, State Tax: ${state_tax}, FICA: ${fica}, Net Pay: ${net_pay} ")
+        gross_pay, income_tax, net_pay = calculate_pay(hours, rate, tax_rate)
 
+        display_employee_info(name, hours, rate, gross_pay, tax_rate, income_tax, net_pay)
 
-    # next employee turn
+        total_employees += 1
+        total_hours += hours
+        total_gross_pay += gross_pay
+        total_tax += income_tax
+        total_net_pay += net_pay
+ 
+    display_totals(total_employees, total_hours, total_gross_pay, total_tax, total_net_pay)
 
-
-    employee_n0+=1
+if __name__ == "__main__":
+    main()
