@@ -1,75 +1,82 @@
-#(\n)Matthew Jones#
+#(\n)Matthew Jones#0
 #CIS261_CourseProject_phase_1(\n)#
  
-def get_employee_name():
-    """Input and return the employee's name."""
-    return input("Enter employee's name (or 'End' to finish): ")
+from datetime import datetime
 
-def get_total_hours():
-    """Input and return the total hours worked."""
-    return float(input("Enter total hours worked: "))
+def get_dates():
+    while True:
+        from_date = input("Enter from date (mm/dd/yyyy): ")
+        to_date = input("Enter to date (mm/dd/yyyy): ")
+        try:
+            # Validate date format
+            datetime.strptime(from_date, '%m/%d/%Y')
+            datetime.strptime(to_date, '%m/%d/%Y')
+            return from_date, to_date
+        except ValueError:
+            print("Invalid date format. Pleasre try again.")
+            
+def get_employee_info():
+    from_date, to_date = get_dates()
+    employee_name = input("Enter employee name: ")
+    total_hours = float(input("Enter total hours worked: "))
+    hourly_rate = float(input("Enter hourly rate: "))
+    income_tax_rate = float(input("Enter income tax rate (as a percentage): ")) / 100 # Convert to decimal
+    return {
+        "from_date": from_date,
+        "to_date": to_date,
+        "employee_name": employee_name,
+        "total_hours": total_hours,
+        "hourly_rate": hourly_rate,
+        "income_tax_rate": income_tax_rate
+    }
 
-def get_hourly_rate():
-    """Input and return the hourly rate."""
-    return float(input("Enter hourly rate: "))
-
-def get_income_tax_rate():
-    """Input and return the income tax rate as a percentage."""
-    return float(input("Enter income tax rate (as a percentage): "))
-
-def calculate_pay(total_hours, hourly_rate, tax_rate):
-    """Calculate gross pay, income tax, and net pay."""
-    gross_pay = total_hours * hourly_rate
-    income_tax = gross_pay * (tax_rate / 100)
+def calculate_financials(employee):
+    gross_pay = employee["total_hours"] * employee["hourly_rate"]
+    income_tax = gross_pay * employee["income_tax_rate"]
     net_pay = gross_pay - income_tax
     return gross_pay, income_tax, net_pay
 
-def display_employee_info(name, total_hours, hourly_rate, gross_pay, tax_rate, income_tax, net_pay):
-    """Display employee information."""
-    print(f"\nEmployee Name: {name}")
-    print(f"Total Hours: {total_hours}")
-    print(f"Hourly Rate: ${hourly_rate:.2f}")
+def display_employee_info(employee, gross_pay, income_tax, net_pay):
+    print(f"From Date: {employee['from_date']}")
+    print(f"To Date: {employee['to_date']}")
+    print(f"Employee Name: {employee['employee_name']}")
+    print(f"Hours Worked: {employee['total_hours']}")
+    print(f"Hourly Rate: ${employee['hourly_rate']:.2f}")
     print(f"Gross Pay: ${gross_pay:.2f}")
-    print(f"Income Tax Rate: {tax_rate}%")
-    print(f"Income Tax: ${income_tax:.2f}")
+    print(f"Income Tax Rate: {employee['income_tax_rate'] * 100:.2f}%")
+    print(f"Income Taxes: ${income_tax:.2f}")
     print(f"Net Pay: ${net_pay:.2f}\n")
-
-def display_totals(total_employees, total_hours, total_gross_pay, total_tax, total_net_pay):
-    """Display totals for all employees."""
-    print("\n--- Summary ---")
-    print(f"Total Employees: {total_employees}")
-    print(f"Total Hours: {total_hours}")
-    print(f"Total Gross Pay: ${total_gross_pay:.2f}")
-    print(f"Total Tax: ${total_tax:.2f}")
-    print(f"Total Net Pay: ${total_net_pay:.2f}\n")
-
+    
 def main():
-    total_employees = 0
-    total_hours = 0
-    total_gross_pay = 0  # Fixed the assignment here
-    total_tax = 0
-    total_net_pay = 0
-
+    employees = []
+    totals = {
+        "total_employees": 0,
+        "total_hours": 0,
+        "total_tax": 0,
+        "total_net_pay": 0
+    }
+    
     while True:
-        name = get_employee_name()  # Removed the colon here
-        if name.lower() == 'end':
+        employee_info = get_employee_info()
+        employees.append(employee_info)
+        
+        if input("Do you want to add another employee? (yes/no): ").lower() != 'yes':
             break
-
-        hours = get_total_hours()
-        rate = get_hourly_rate()
-        tax_rate = get_income_tax_rate()
-
-        gross_pay, income_tax, net_pay = calculate_pay(hours, rate, tax_rate)
-
-        display_employee_info(name, hours, rate, gross_pay, tax_rate, income_tax, net_pay)
-
-        total_employees += 1
-        total_hours += hours
-        total_gross_pay += gross_pay
-        total_tax += income_tax
-        total_net_pay += net_pay
- 
-    display_totals(total_employees, total_hours, total_gross_pay, total_tax, total_net_pay)
-
+        
+    for employee in employees:
+        gross_pay, income_tax, net_pay = calculate_financials(employee)
+        display_employee_info(employee, gross_pay, income_tax, net_pay)
+        
+        totals["total_employees"] += 1
+        totals["total_hours"] += employee["total_hours"]
+        totals["total_tax"] += income_tax
+        totals["total_net_pay"] += net_pay
+        
+    print("Total Employees:", totals["total_employees"])
+    print("Total Hours:", totals["total_hours"])
+    print("Total Tax:", totals["total_tax"])
+    print("Total Net Pay:", totals["total_net_pay"])
+    
 if __name__ == "__main__":
     main()
+        
